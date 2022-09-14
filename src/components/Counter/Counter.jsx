@@ -1,29 +1,57 @@
-import React from 'react';
-import { Buttons } from './Buttons';
-import { Stats } from './Stats';
-import './Counter.css';
+import React, {Component} from 'react';
+import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
+import { Stats } from './Stats/Stats';
+import { Notification } from './Notification/Notification';
+import { Section } from './Section/Section';
 
-class Counter extends React.Component {
+class Counter extends Component {
   state = {
     good: 0,
     neutral: 0,
     bad: 0,
   };
 
-  handleFeedback = () => {
-    this.setState(s => ({
-      good: s.good + 1,
+  countTotalFeedback = () => {
+    const { good, neutral, bad, } = this.state;
+    return (good + neutral + bad);
+  }
+
+  countPositiveFeedbackPercentage = () => {
+    const total = this.countTotalFeedback();
+    if (!total) {
+        return 0;
+    }
+    const value = this.state.good;
+    const result = (value / total) * 100;
+    return Number(result.toFixed(2));
+  }
+
+  handleFeedback = (vote) => {
+    this.setState(prev => ({
+      [vote]: prev[vote] + 1
     }))
   }
 
   render() {
+    const total = this.countTotalFeedback();
+    const positivePercent = this.countPositiveFeedbackPercentage();
     return <div>
-      <h1>Please leave your feedback</h1>
-      <Buttons handler={this.handleFeedback} />
-      <h2>Statistics</h2>
-      <Stats good={this.state.good} neutral={this.state.neutral} bad={this.state.bad} />
-      </div>
+      <Section title="Please leave your feedback">
+        <FeedbackOptions handler={this.handleFeedback} />
+      </Section>
+      <Section title="Statistics">
+        {!total ?
+        <Notification message="There is no feedback :(" /> :
+        <Stats
+        good={this.state.good}
+        neutral={this.state.neutral}
+        bad={this.state.bad}
+        total={total}
+        positivePercent={positivePercent} />}
+      </Section>
+    </div>
   }
 }
 
 export default Counter
+
