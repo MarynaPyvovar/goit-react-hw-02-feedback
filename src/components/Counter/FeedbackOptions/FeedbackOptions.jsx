@@ -1,10 +1,13 @@
 import React from "react";
 import css from './FeedbackOptions.module.css';
 
-export const FeedbackOptions = ({handler}) => {
+export const FeedbackOptions = ({ options, handler }) => {
     return <div className={css.buttonWrapper}>
-        <button className={css.button} type='button' onClick={() => handler("good")}>Good</button>
-        <button className={css.button} type='button' onClick={() => handler("neutral")}>Neutral</button>
-        <button className={css.button} type='button' onClick={() => handler("bad")}>Bad</button>
+        {options.map(option => {
+            const text = option[0].toUpperCase() + option.slice(1);
+            return <button key={option} className={css.button} type='button' onClick={() => handler(option)}>{text}</button>
+            })
+        }
     </div>
 }
+
