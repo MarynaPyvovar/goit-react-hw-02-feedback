@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from "prop-types";
 
 import { Section } from './Section/Section';
 import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
@@ -37,7 +36,7 @@ export default class Counter extends Component {
     const positivePercent = this.countPositiveFeedbackPercentage();
     return <>
       <Section title="Please leave your feedback">
-        <FeedbackOptions options={["good", "neutral", "bad"]} handler={this.handleFeedback} />
+        <FeedbackOptions options={Object.keys(this.state)} handler={this.handleFeedback} />
       </Section>
       <Section title="Statistics">
         {!total ?
@@ -51,14 +50,4 @@ export default class Counter extends Component {
       </Section>
     </>
   }
-}
-
-Counter.propTypes = {
-  state: PropTypes.objectOf(PropTypes.shape({
-    good: PropTypes.number.isRequired,
-    neutral: PropTypes.number.isRequired,
-    bad: PropTypes.number.isRequired,
-  })),
-  total: PropTypes.number,
-  positivePercent: PropTypes.number,
 }
